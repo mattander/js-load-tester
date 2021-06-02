@@ -189,6 +189,22 @@ export default {
                 return encodeURI(url.trim());
             });
         },
+        averageTimePerMeta(arr) {
+            const result = {};
+            arr.forEach(({ metadata, start, end }) => {
+                if (!result[metadata])
+                    result[metadata] = [(end - start) / 1000];
+                else result[metadata].push((end - start) / 1000);
+            });
+
+            return Object.fromEntries(
+                Object.entries(result).map(([key, value]) => {
+                    const average =
+                        value.reduce((a, b) => a + b) / value.length;
+                    return [key, average];
+                })
+            );
+        },
         ping() {
             if (this.testUrls.length === 0) {
                 return;
